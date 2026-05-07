@@ -1,110 +1,103 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ERC Audit</title>
+<title>HR Transcribe</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#08080a;--sf:#111116;--sf2:#19191f;--bd:#242430;
   --tx:#eae8e4;--dm:#636375;--ac:#f59e0b;--acbg:rgba(245,158,11,.07);
   --acbd:rgba(245,158,11,.18);--gn:#22c55e;--gnbg:rgba(34,197,94,.07);
-  --gnbd:rgba(34,197,94,.18);--rd:#ef4444;--bl:#60a5fa;
-  --pu:#a855f7;--pubg:rgba(168,85,247,.07);--pubd:rgba(168,85,247,.18);
+  --gnbd:rgba(34,197,94,.18);--rd:#ef4444;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100dvh;-webkit-font-smoothing:antialiased}
 .c{max-width:480px;margin:0 auto;padding:14px 13px 56px}
 
 .hdr{text-align:center;padding:10px 0 20px}
-.tag{display:inline-block;font-family:‘JetBrains Mono’,monospace;font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(–ac);background:var(–acbg);border:1px solid var(–acbd);padding:3px 12px;border-radius:20px;margin-bottom:8px}
+.tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--ac);background:var(--acbg);border:1px solid var(--acbd);padding:3px 12px;border-radius:20px;margin-bottom:8px}
 .hdr h1{font-size:24px;font-weight:700;letter-spacing:-.5px;margin-bottom:3px}
-.hdr p{color:var(–dm);font-size:11px}
+.hdr p{color:var(--dm);font-size:11px}
 
-.card{background:var(–sf);border:1px solid var(–bd);border-radius:12px;padding:14px;margin-bottom:10px}
-.lbl{font-family:‘JetBrains Mono’,monospace;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(–dm);margin-bottom:8px}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:10px}
+.lbl{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dm);margin-bottom:8px}
 
-.zone{border:2px dashed var(–bd);border-radius:10px;padding:28px 14px;text-align:center;cursor:pointer;transition:all .12s}
-.zone:active{transform:scale(.98)}.zone.ok{border-color:var(–gnbd);border-style:solid}
+.zone{border:2px dashed var(--bd);border-radius:10px;padding:28px 14px;text-align:center;cursor:pointer;transition:all .12s}
+.zone:active{transform:scale(.98)}
+.zone.ok{border-color:var(--gnbd);border-style:solid}
 .zone .ic{font-size:28px;margin-bottom:5px;display:block}
 .zone .t1{font-size:14px;font-weight:600;margin-bottom:2px}
-.zone .t2{font-size:10px;color:var(–dm)}
+.zone .t2{font-size:10px;color:var(--dm)}
 #fileIn{display:none}
-.fi{display:none;margin-top:8px;padding:7px 10px;background:var(–sf2);border-radius:8px;font-family:‘JetBrains Mono’,monospace;font-size:10px;color:var(–dm);align-items:center;gap:6px}
-.fi.v{display:flex}.fi .fn{color:var(–tx);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.xb{background:none;border:none;color:var(–rd);font-size:13px;cursor:pointer;padding:2px}
+.fi{display:none;margin-top:8px;padding:7px 10px;background:var(--sf2);border-radius:8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dm);align-items:center;gap:6px}
+.fi.v{display:flex}
+.fi .fn{color:var(--tx);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.xb{background:none;border:none;color:var(--rd);font-size:13px;cursor:pointer;padding:2px}
 
-.go{width:100%;padding:14px;background:var(–ac);color:#000;font-family:‘DM Sans’,sans-serif;font-size:15px;font-weight:700;border:none;border-radius:11px;cursor:pointer;transition:all .12s;margin-bottom:10px}
-.go:active{transform:scale(.97)}.go:disabled{opacity:.25;cursor:not-allowed;transform:none}
-.go.busy{background:var(–sf2);color:var(–ac);border:1px solid var(–acbd)}
+.go{width:100%;padding:14px;background:var(--ac);color:#000;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;border:none;border-radius:11px;cursor:pointer;transition:all .12s;margin-bottom:10px}
+.go:active{transform:scale(.97)}
+.go:disabled{opacity:.25;cursor:not-allowed;transform:none}
+.go.busy{background:var(--sf2);color:var(--ac);border:1px solid var(--acbd)}
 
-.prog{display:none;margin-bottom:12px}.prog.v{display:block}
-.trk{height:3px;background:var(–sf2);border-radius:3px;overflow:hidden;margin-bottom:6px}
-.fill{height:100%;background:var(–ac);border-radius:3px;transition:width .3s}
+.prog{display:none;margin-bottom:12px}
+.prog.v{display:block}
+.trk{height:3px;background:var(--sf2);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.fill{height:100%;background:var(--ac);border-radius:3px;transition:width .3s}
 .fill.ind{width:25%;animation:sl 1.1s ease-in-out infinite}
 @keyframes sl{0%{transform:translateX(-120%)}100%{transform:translateX(480%)}}
-.sttxt{font-size:11px;color:var(–dm);text-align:center}
-.pct{font-family:‘JetBrains Mono’,monospace;color:var(–ac)}
+.sttxt{font-size:11px;color:var(--dm);text-align:center}
 
-.minfo{display:none;background:var(–sf);border:1px solid var(–bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:11px;color:var(–dm);line-height:1.5}
+.minfo{display:none;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:11px;color:var(--dm);line-height:1.5}
 .minfo.v{display:block}
-.minfo b{color:var(–tx)}
+.minfo b{color:var(--tx)}
 
-.txcard{display:none;background:var(–sf);border:1px solid var(–bd);border-radius:12px;overflow:hidden;margin-bottom:10px}.txcard.v{display:block}
-.txhdr{padding:10px 14px;border-bottom:1px solid var(–bd);display:flex;justify-content:space-between;align-items:center}
-.txhdr .ttl{font-family:‘JetBrains Mono’,monospace;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(–dm)}
-.cb{background:var(–sf2);border:1px solid var(–bd);border-radius:7px;padding:5px 10px;color:var(–dm);font-size:10px;cursor:pointer;transition:all .15s}
-.cb:active{transform:scale(.95)}.cb.ok{color:var(–gn);border-color:var(–gnbd)}
+.txcard,.gcard{display:none;background:var(--sf);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:10px}
+.txcard.v,.gcard.v{display:block}
+.txhdr{padding:10px 14px;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center}
+.txhdr .ttl{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--dm)}
+.cb{background:var(--sf2);border:1px solid var(--bd);border-radius:7px;padding:5px 10px;color:var(--dm);font-size:10px;cursor:pointer;transition:all .15s}
+.cb:active{transform:scale(.95)}
+.cb.ok{color:var(--gn);border-color:var(--gnbd)}
 .txbody{padding:13px 14px;font-size:13px;line-height:1.7;max-height:55vh;overflow-y:auto;-webkit-overflow-scrolling:touch;white-space:pre-wrap;word-wrap:break-word}
-.ts{color:var(–dm);font-family:‘JetBrains Mono’,monospace;font-size:10px}
+.ts{color:var(--dm);font-family:'JetBrains Mono',monospace;font-size:10px}
+.gp{padding:11px 14px;font-size:11px;line-height:1.5;color:var(--dm)}
+.gp a{color:var(--ac)}
+.gprompt{padding:11px 14px;font-size:11px;line-height:1.5;color:var(--tx);white-space:pre-wrap;max-height:150px;overflow-y:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(--bd);background:var(--sf2)}
 
-.gcard{display:none;background:var(–sf);border:1px solid var(–bd);border-radius:12px;overflow:hidden;margin-bottom:10px}.gcard.v{display:block}
-.gp{padding:11px 14px;font-size:11px;line-height:1.5;color:var(–dm)}
-.gp a{color:var(–ac)}
-.gprompt{padding:11px 14px;font-size:11px;line-height:1.5;color:var(–tx);white-space:pre-wrap;max-height:150px;overflow-y:auto;-webkit-overflow-scrolling:touch;border-top:1px solid var(–bd);background:var(–sf2)}
-
-.ecard{display:none;background:var(–sf);border:1px solid var(–bd);border-radius:12px;padding:14px;margin-bottom:10px;text-align:center}.ecard.v{display:block}
-.ecard p{font-size:11px;color:var(–dm);line-height:1.5;margin-bottom:10px}
-.em-addr{font-family:‘JetBrains Mono’,monospace;color:var(–pu);font-size:10px;display:block;margin-bottom:10px}
-.ebtn{width:100%;padding:13px;background:var(–pubg);color:var(–pu);font-family:‘DM Sans’,sans-serif;font-size:14px;font-weight:700;border:1px solid var(–pubd);border-radius:11px;cursor:pointer;transition:all .12s;margin-bottom:8px}
-.ebtn:active{transform:scale(.97)}
-.enote{font-size:9px;color:var(–dm);line-height:1.4}
-
-.err{display:none;padding:10px 12px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.12);border-radius:10px;color:var(–rd);font-size:11px;line-height:1.4;margin-bottom:10px}.err.v{display:block}
-.foot{text-align:center;padding:14px 0 0;font-size:8px;color:var(–dm);opacity:.35;line-height:1.6}
+.err{display:none;padding:10px 12px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.12);border-radius:10px;color:var(--rd);font-size:11px;line-height:1.4;margin-bottom:10px}
+.err.v{display:block}
+.foot{text-align:center;padding:14px 0 0;font-size:8px;color:var(--dm);opacity:.35;line-height:1.6}
 </style>
-
 </head>
 <body>
 <div class="c">
-
   <div class="hdr">
     <span class="tag">Serverless · On-Device · Zero Trust</span>
-    <h1>ERC Audit</h1>
-    <p>Upload → Transcribe → Document. Nothing leaves your phone.</p>
+    <h1>HR Transcribe</h1>
+    <p>Upload → Transcribe → Document workplace calls.</p>
   </div>
 
   <div class="card">
-    <div class="lbl">Call recording</div>
+    <div class="lbl">Audio upload</div>
     <div class="zone" id="zone" onclick="document.getElementById('fileIn').click()">
       <span class="ic">🎙️</span>
       <div class="t1">Tap to select audio</div>
-      <div class="t2">m4a · mp3 · wav · mp4 — up to 25 MB</div>
+      <div class="t2">Spoken audio works best · m4a · mp3 · wav · mp4 · up to 25 MB</div>
     </div>
     <input type="file" id="fileIn" accept="audio/*,video/*,.m4a,.mp3,.wav,.mp4,.webm,.ogg,.aac" onchange="onFile(this)">
     <div class="fi" id="fi">
       <span class="fn" id="fn"></span>
       <span class="fs" id="fsize"></span>
-      <button class="xb" onclick="clrFile()">✕</button>
+      <button class="xb" type="button" onclick="clrFile()">✕</button>
     </div>
   </div>
 
-<button class="go" id="goBtn" disabled onclick="doTranscribe()">Transcribe</button>
+  <button class="go" id="goBtn" disabled onclick="doTranscribe()">Transcribe</button>
 
   <div class="minfo" id="minfo">
-    ⏳ <b>First time only:</b> Downloads Whisper (~45 MB). Cached after. Transcription takes ~2-3× the audio length on a phone.
+    ⏳ <b>First time only:</b> Downloads Whisper (~45 MB). Cached after. Best with clear spoken call audio. Music, stems, or ambient sound can produce bad transcripts.
   </div>
 
   <div class="prog" id="prog">
@@ -117,157 +110,183 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-h
   <div class="txcard" id="txCard">
     <div class="txhdr">
       <span class="ttl">📝 Transcript</span>
-      <button class="cb" onclick="cpTx(this)">Copy</button>
+      <button class="cb" type="button" onclick="cpTx(this)">Copy</button>
     </div>
     <div class="txbody" id="txBody"></div>
   </div>
 
   <div class="gcard" id="gCard">
     <div class="txhdr">
-      <span class="ttl">⚡ Extract commitments</span>
-      <button class="cb" onclick="cpGem(this)">Copy prompt</button>
+      <span class="ttl">⚡ Extract notes</span>
+      <button class="cb" type="button" onclick="cpGem(this)">Copy prompt</button>
     </div>
     <div class="gp">
-      Paste your transcript + this prompt into <a href="https://gemini.google.com" target="_blank">gemini.google.com</a> to extract every promise, case ID, and deadline:
+      Paste your transcript + this prompt into <a href="https://gemini.google.com" target="_blank" rel="noreferrer">gemini.google.com</a> to extract key details:
     </div>
-    <div class="gprompt" id="gprompt">Given this ERC call transcript, list under "COMMITMENTS & PROMISES":
-- Every promise the ERC agent made
-- Every case ID, ticket number, or reference number
-- Every timeline or deadline given
-- Every action item ("I'll submit that", "I'll escalate this")
+    <div class="gprompt" id="gprompt">Given this workplace call transcript, list:
+- Key commitments made
+- Any case ID, reference number, or ticket number
+- Any dates or deadlines mentioned
+- Any follow-up actions
+- Any points that need clarification
 
-If none: “No commitments were made.”
+If none, say: "No clear commitments were identified."
 
 TRANSCRIPT:
 [paste transcript here]</div>
-
-  </div>
-
-  <div class="ecard" id="eCard">
-    <div class="lbl">📬 Help build the record</div>
-    <p>Opt in to send your transcript to the collective archive. Patterns across associates become evidence.</p>
-    <span class="em-addr">ERCAUDIT@proton.me</span>
-    <button class="ebtn" onclick="sendEmail()">Send to ERC Audit</button>
-    <div class="enote">Opens your email app with the transcript pre-filled. Attach the audio if you want. Nothing sends until you hit send.</div>
   </div>
 
   <div class="foot">
     Whisper by OpenAI · Runs locally via Transformers.js<br>
     No server. No backend. No account. No tracking.<br>
-    "This call may be recorded for quality and training purposes." — Done.
+    Built for documenting workplace conversations you are authorized to record.
   </div>
 </div>
 
 <script>
-// ===== Core utils (no dependencies) =====
 let rawFile = null;
 let transcriptText = '';
-let whisperPipeline = null;
-let modelReady = false;
 
 const $ = id => document.getElementById(id);
-const show = (...ids) => ids.forEach(id => { const el=$(id); if(el){el.classList.add('v'); el.style.removeProperty('display');} });
-const hide = (...ids) => ids.forEach(id => { const el=$(id); if(el){el.classList.remove('v');} });
-function setSt(m){ $('stTxt').innerHTML = m; }
-function sErr(m){ $('err').textContent=''; $('err').innerHTML=m; $('err').classList.add('v'); }
+const show = (...ids) => ids.forEach(id => { const el = $(id); if (el) { el.classList.add('v'); el.style.removeProperty('display'); } });
+const hide = (...ids) => ids.forEach(id => { const el = $(id); if (el) { el.classList.remove('v'); } });
+function setSt(message){ $('stTxt').innerHTML = message; }
+function sErr(message){ $('err').textContent = ''; $('err').innerHTML = message; $('err').classList.add('v'); }
 function hErr(){ $('err').classList.remove('v'); }
 
-// ===== File handling (works without model) =====
+function getAudioStats(samples){
+  let peak = 0;
+  let sumAbs = 0;
+  let nonTrivial = 0;
+  for(let i = 0; i < samples.length; i++){
+    const v = Math.abs(samples[i]);
+    if(v > peak) peak = v;
+    sumAbs += v;
+    if(v > 0.01) nonTrivial++;
+  }
+  return {
+    peak,
+    avgAbs: sumAbs / samples.length,
+    activeRatio: nonTrivial / samples.length
+  };
+}
+
 window.onFile = function(inp) {
-  const f = inp.files[0]; if(!f) return;
-  if(f.size > 25*1048576){ sErr('25 MB max.'); inp.value=''; return; }
+  const f = inp.files[0];
+  if(!f) return;
+  if(f.size > 25 * 1048576){
+    sErr('25 MB max.');
+    inp.value = '';
+    return;
+  }
   rawFile = f;
   $('fn').textContent = f.name;
-  $('fsize').textContent = f.size<1048576 ? (f.size/1024).toFixed(1)+' KB' : (f.size/1048576).toFixed(1)+' MB';
+  $('fsize').textContent = f.size < 1048576 ? (f.size / 1024).toFixed(1) + ' KB' : (f.size / 1048576).toFixed(1) + ' MB';
   show('fi');
   $('zone').classList.add('ok');
   $('zone').querySelector('.t1').textContent = 'File loaded ✓';
   $('goBtn').disabled = false;
-  hErr(); hide('txCard','gCard','eCard');
+  hErr();
+  hide('txCard','gCard');
 };
 
 window.clrFile = function() {
-  rawFile = null; transcriptText = '';
+  rawFile = null;
+  transcriptText = '';
   $('fileIn').value = '';
-  hide('fi','minfo','txCard','gCard','eCard','prog');
+  hide('fi','minfo','txCard','gCard','prog');
   $('zone').classList.remove('ok');
   $('zone').querySelector('.t1').textContent = 'Tap to select audio';
   $('goBtn').disabled = true;
-};
-
-// ===== Email & copy (work without model) =====
-window.sendEmail = function() {
-  const subj = encodeURIComponent('ERC Transcript — ' + new Date().toLocaleDateString());
-  const body = encodeURIComponent(
-    'ERC CALL TRANSCRIPT\nDate: ' + new Date().toLocaleString() +
-    '\n───────────────────\n\n' +
-    (transcriptText || '[No transcript — audio attached]') +
-    '\n\n───────────────────\nAttach audio file before sending if desired.\nThis submission is voluntary.'
-  );
-  window.location.href = `mailto:ERCAUDIT@proton.me?subject=${subj}&body=${body}`;
+  hErr();
 };
 
 window.cpTx = function(btn) {
   navigator.clipboard.writeText(transcriptText).then(() => {
-    btn.textContent='Copied ✓'; btn.classList.add('ok');
-    setTimeout(()=>{ btn.textContent='Copy'; btn.classList.remove('ok'); }, 2000);
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('ok');
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.classList.remove('ok');
+    }, 2000);
   });
 };
 
 window.cpGem = function(btn) {
   const prompt = $('gprompt').textContent.replace('[paste transcript here]', transcriptText);
   navigator.clipboard.writeText(prompt).then(() => {
-    btn.textContent='Copied ✓'; btn.classList.add('ok');
-    setTimeout(()=>{ btn.textContent='Copy prompt'; btn.classList.remove('ok'); }, 2000);
+    btn.textContent = 'Copied ✓';
+    btn.classList.add('ok');
+    setTimeout(() => {
+      btn.textContent = 'Copy prompt';
+      btn.classList.remove('ok');
+    }, 2000);
   });
 };
 
-// ===== Transcribe =====
 window.doTranscribe = async function() {
   if(!rawFile) return;
 
-  // Check if engine loaded
   if(!window._tfjs) {
-    sErr('⚠️ Whisper engine not loaded. <b>Save this file and open it in Safari or Chrome</b> — it can\'t run inside app previews.');
+    sErr('⚠️ Whisper engine not loaded. <b>Open this in Safari or Chrome</b> — it cannot run inside some app previews.');
     return;
   }
 
   const btn = $('goBtn');
-  btn.disabled = true; btn.textContent = 'Transcribing...'; btn.classList.add('busy');
+  btn.disabled = true;
+  btn.textContent = 'Transcribing...';
+  btn.classList.add('busy');
   show('minfo','prog');
   $('barFill').style.width = '0%';
   $('barFill').classList.remove('ind');
   setSt('Decoding audio...');
-  hErr(); hide('txCard','gCard','eCard');
+  hErr();
+  hide('txCard','gCard');
 
   try {
-    const ctx = new (window.AudioContext||window.webkitAudioContext)({sampleRate:16000});
+    const ctx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
     const buf = await ctx.decodeAudioData(await rawFile.arrayBuffer());
     const L = buf.getChannelData(0);
     let mono;
     if(buf.numberOfChannels > 1){
       const R = buf.getChannelData(1);
       mono = new Float32Array(L.length);
-      for(let i=0;i<L.length;i++) mono[i]=(L[i]+R[i])*.5;
-    } else { mono = new Float32Array(L); }
-    ctx.close();
+      for(let i = 0; i < L.length; i++) mono[i] = (L[i] + R[i]) * 0.5;
+    } else {
+      mono = new Float32Array(L);
+    }
+    await ctx.close();
 
-    const dur = mono.length/16000;
-    const fmtT = s => Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+    const dur = mono.length / 16000;
+    const stats = getAudioStats(mono);
+    const fmtT = s => Math.floor(s / 60) + ':' + String(Math.floor(s % 60)).padStart(2,'0');
+
+    if(dur < 1.0) {
+      throw new Error('Audio is too short to transcribe reliably.');
+    }
+
+    if(stats.peak < 0.005 || stats.avgAbs < 0.0008) {
+      throw new Error('This file looks extremely quiet or blank. Try a louder spoken call recording.');
+    }
+
+    if(stats.activeRatio < 0.01) {
+      throw new Error('This file does not look like sustained speech. Try a real spoken recording instead of music, stems, or ambient audio.');
+    }
+
     setSt('Loading Whisper model...');
 
     const transcriber = await window._tfjs.pipeline(
       'automatic-speech-recognition',
-      'onnx-community/whisper-tiny',
+      'onnx-community/whisper-tiny.en',
       {
         dtype: 'q8',
         progress_callback: p => {
-          if(p.status==='progress' && p.progress){
-            $('barFill').style.width = Math.round(p.progress)+'%';
+          if(p.status === 'progress' && p.progress){
+            $('barFill').style.width = Math.round(p.progress) + '%';
             $('barFill').classList.remove('ind');
             setSt('Downloading model... ' + Math.round(p.progress) + '%');
           }
-          if(p.status==='ready'){
+          if(p.status === 'ready'){
             setSt('Transcribing ~' + fmtT(dur) + ' of audio...');
             $('barFill').classList.add('ind');
             $('barFill').style.width = '';
@@ -282,39 +301,40 @@ window.doTranscribe = async function() {
     const result = await transcriber(mono, {
       return_timestamps: true,
       chunk_length_s: 30,
-      stride_length_s: 5,
-      language: 'english',
-      task: 'transcribe'
+      stride_length_s: 5
     });
 
     if(result.chunks && result.chunks.length){
       transcriptText = result.chunks
         .map(ch => {
           const s = ch.timestamp?.[0] || 0;
-          const txt = (ch.text||'').trim();
-          return txt ? `[${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}] ${txt}` : null;
+          const txt = (ch.text || '').trim();
+          return txt ? `[${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2,'0')}] ${txt}` : null;
         })
         .filter(Boolean)
         .join('\n');
     } else {
-      transcriptText = result.text || 'No speech detected.';
+      transcriptText = (result.text || '').trim();
+    }
+
+    if(!transcriptText || transcriptText.length < 6) {
+      throw new Error('No reliable speech detected. Try a clearer spoken recording.');
     }
 
     $('txBody').innerHTML = transcriptText.replace(/\[(\d+:\d+)\]/g, '<span class="ts">[$1]</span>');
-    show('txCard','gCard','eCard');
+    show('txCard','gCard');
     hide('minfo');
-    $('txCard').scrollIntoView({behavior:'smooth', block:'start'});
-
+    $('txCard').scrollIntoView({ behavior:'smooth', block:'start' });
   } catch(e) {
     sErr(e.message || 'Failed. Try a shorter file or refresh.');
   } finally {
-    btn.disabled = false; btn.textContent = 'Transcribe'; btn.classList.remove('busy');
+    btn.disabled = false;
+    btn.textContent = 'Transcribe';
+    btn.classList.remove('busy');
     hide('prog');
   }
 };
 </script>
-
-<!-- Load Transformers.js — separated so import failure doesn't break UI -->
 
 <script type="module">
 try {
@@ -324,11 +344,10 @@ try {
 } catch(e) {
   const err = document.getElementById('err');
   if(err){
-    err.innerHTML = '⚠️ Whisper engine blocked in this viewer. <b>Save the file → open in Safari</b> to transcribe.';
+    err.innerHTML = '⚠️ Whisper engine blocked in this viewer. <b>Save the file → open in Safari or Chrome</b> to transcribe.';
     err.classList.add('v');
   }
 }
 </script>
-
 </body>
 </html>
